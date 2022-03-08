@@ -65,6 +65,7 @@ const IndexPage = props => {
   if (errors) {
     return (
       <Layout>
+        <div>Hello world, while there is one.</div>
         <GraphQLErrorList errors={errors} />
       </Layout>
     );
