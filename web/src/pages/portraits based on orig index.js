@@ -1,6 +1,5 @@
 import React from "react";
-import { graphql, Link } from "gatsby";
-import HoverImage from "react-hover-image";
+import { graphql } from "gatsby";
 import {
   mapEdgesToNodes,
   filterOutDocsWithoutSlugs,
@@ -13,16 +12,16 @@ import SEO from "../components/seo";
 import Layout from "../containers/layout";
 
 export const query = graphql`
-  query IndexPageQuery {
+  query PortraitsPageQuery {
     site: sanitySiteSettings(_id: { regex: "/(drafts.|)siteSettings/" }) {
       title
       description
       keywords
     }
     projects: allSanitySampleProject(
-      limit: 6
+      limit: 30
       sort: { fields: [publishedAt], order: DESC }
-      filter: { slug: { current: { ne: null } }, publishedAt: { ne: null } }
+      filter: { categories: {elemMatch: {title: {eq: "Portraits"}}}, slug: { current: { ne: null } }, publishedAt: { ne: null } }
     ) {
       edges {
         node {
@@ -60,7 +59,7 @@ export const query = graphql`
   }
 `;
 
-const IndexPage = props => {
+const PortraitsPage = props => {
   const { data, errors } = props;
 
   if (errors) {
@@ -89,12 +88,16 @@ const IndexPage = props => {
       <SEO title={site.title} description={site.description} keywords={site.keywords} />
       <Container>
         <h1>Welcome to {site.title}</h1>
-        <Link to="/portraits/">
-          <HoverImage src="portraits.jpg" hoverSrc="PortraitsHover.jpg" />
-        </Link>
+        {projectNodes && (
+          <ProjectPreviewGrid
+            title="Latest projects"
+            nodes={projectNodes}
+            browseMoreHref="/archive/"
+          />
+        )}
       </Container>
     </Layout>
   );
 };
 
-export default IndexPage;
+export default PortraitsPage;
