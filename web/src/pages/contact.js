@@ -180,13 +180,31 @@ export default function contactForm(props) {
           <form id="contact" action="" method="post" data-netlify="true">
             <h3>Contact Jennie Summerall</h3>
             <fieldset>
-              <input placeholder="Your name" type="text" tabindex="1" required autofocus />
+              <input
+                name="name"
+                placeholder="Your name"
+                type="text"
+                tabindex="1"
+                required
+                autofocus
+              />
             </fieldset>
             <fieldset>
-              <input placeholder="Your Email Address" type="email" tabindex="2" required />
+              <input
+                name="email"
+                placeholder="Your Email Address"
+                type="email"
+                tabindex="2"
+                required
+              />
             </fieldset>
             <fieldset>
-              <textarea placeholder="Type your message here...." tabindex="5" required></textarea>
+              <textarea
+                name="message"
+                placeholder="Type your message here...."
+                tabindex="5"
+                required
+              ></textarea>
             </fieldset>
             <fieldset>
               <button name="submit" type="submit" id="contact-submit" data-submit="...Sending">
