@@ -177,7 +177,7 @@ export default function contactForm(props) {
       <ContactStyled>
         <SEO title={site.title} description={site.description} keywords={site.keywords} />
         <div class="container">
-          <form id="contact" action="" method="post" data-netlify="true">
+          <form id="contact" method="POST" data-netlify="true" action="/pages/index">
             <h3>Contact Jennie Summerall</h3>
             <fieldset>
               <input
