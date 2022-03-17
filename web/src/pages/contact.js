@@ -105,7 +105,7 @@ const ContactStyled = styled.div`
     cursor: pointer;
     width: 100%;
     border: none;
-    background: #4caf50;
+    background: #370d32;
     color: #fff;
     margin: 0 0 5px;
     padding: 10px;
@@ -113,7 +113,7 @@ const ContactStyled = styled.div`
   }
 
   #contact button[type="submit"]:hover {
-    background: #43a047;
+    background: #56144d;
     -webkit-transition: background 0.3s ease-in-out;
     -moz-transition: background 0.3s ease-in-out;
     transition: background-color 0.3s ease-in-out;
@@ -202,47 +202,61 @@ export default function contactForm(props) {
 
   return (
     <Layout>
-      <h1>Contact</h1>
-      <form
-        name="contact"
-        method="post"
-        action="/"
-        data-netlify="true"
-        data-netlify-honeypot="bot-field"
-        onSubmit={handleSubmit}
-      >
-        {/* The `form-name` hidden field is required to support form submissions without JavaScript */}
-        <input type="hidden" name="form-name" value="contact" />
-        <p hidden>
-          <label>
-            Don’t fill this out: <input name="bot-field" onChange={handleChange} />
-          </label>
-        </p>
-        <p>
-          <label>
-            Your name:
-            <br />
-            <input type="text" name="name" onChange={handleChange} />
-          </label>
-        </p>
-        <p>
-          <label>
-            Your email:
-            <br />
-            <input type="email" name="email" onChange={handleChange} />
-          </label>
-        </p>
-        <p>
-          <label>
-            Message:
-            <br />
-            <textarea name="message" onChange={handleChange} />
-          </label>
-        </p>
-        <p>
-          <button type="submit">Send</button>
-        </p>
-      </form>
+      <ContactStyled>
+        <div class="container">
+          <form
+            name="contact"
+            id="contact"
+            method="post"
+            action="/"
+            data-netlify="true"
+            data-netlify-honeypot="bot-field"
+            onSubmit={handleSubmit}
+          >
+            <h3>Contact Jennie Summerall</h3>
+            {/* The `form-name` hidden field is required to support form submissions without JavaScript */}
+            <input type="hidden" name="form-name" value="contact" />
+            <p hidden>
+              <label>
+                Don’t fill this out: <input name="bot-field" onChange={handleChange} />
+              </label>
+            </p>
+            <fieldset>
+              <input
+                tabindex="1"
+                required
+                autofocus
+                placeholder="Your name"
+                type="text"
+                name="name"
+                onChange={handleChange}
+              />
+            </fieldset>
+            <fieldset>
+              <input
+                tabindex="2"
+                required
+                placeholder="Your email"
+                type="email"
+                name="email"
+                onChange={handleChange}
+              />
+            </fieldset>
+            <fieldset>
+              <textarea
+                tabindex="3"
+                required
+                placeholder="Your message"
+                name="message"
+                onChange={handleChange}
+              />
+            </fieldset>
+            <button type="submit" id="contact-submit">
+              Send
+            </button>
+          </form>
+        </div>
+      </ContactStyled>
     </Layout>
   );
 }
