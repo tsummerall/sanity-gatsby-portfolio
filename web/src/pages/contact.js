@@ -3,6 +3,7 @@ import SEO from "../components/seo";
 import Layout from "../components/layout";
 import { graphql } from "gatsby";
 import styled from "styled-components";
+import { navigate } from "gatsby-link";
 
 const ContactStyled = styled.div`
   @import url(https://fonts.googleapis.com/css?family=Roboto:400, 300, 600, 400italic);
@@ -145,6 +146,12 @@ const ContactStyled = styled.div`
   }
 `;
 
+function encode(data) {
+  return Object.keys(data)
+    .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
+    .join("&");
+}
+
 export const query = graphql`
   query ContactPageQuery {
     site: sanitySiteSettings(_id: { regex: "/(drafts.|)siteSettings/" }) {
@@ -172,56 +179,70 @@ export default function contactForm(props) {
     );
   }
 
+  const [state, setState] = React.useState({});
+
+  const handleChange = e => {
+    setState({ ...state, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    const form = e.target;
+    fetch("/", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: encode({
+        "form-name": form.getAttribute("name"),
+        ...state
+      })
+    })
+      .then(() => navigate(form.getAttribute("action")))
+      .catch(error => alert(error));
+  };
+
   return (
     <Layout>
-      <ContactStyled>
-        <SEO title={site.title} description={site.description} keywords={site.keywords} />
-        <div class="container">
-          <form
-            id="contact"
-            method="POST"
-            data-netlify="true"
-            data-netlify-honeypot="bot-field"
-            action="/"
-          >
-            <input type="hidden" name="form-name" value="contact" />
-
-            <h3>Contact Jennie Summerall</h3>
-            <fieldset>
-              <input
-                name="name"
-                placeholder="Your name"
-                type="text"
-                tabindex="1"
-                required
-                autofocus
-              />
-            </fieldset>
-            <fieldset>
-              <input
-                name="email"
-                placeholder="Your Email Address"
-                type="email"
-                tabindex="2"
-                required
-              />
-            </fieldset>
-            <fieldset>
-              <textarea
-                name="message"
-                placeholder="Type your message here...."
-                tabindex="5"
-                required
-              ></textarea>
-            </fieldset>
-            <fieldset>
-              <button name="submit" type="submit" id="contact-submit" data-submit="...Sending">
-                Submit
-              </button>
-            </fieldset>
-          </form>
-        </div>
-      </ContactStyled>
+      <h1>Contact</h1>
+      <form
+        name="contact"
+        method="post"
+        action="/"
+        data-netlify="true"
+        data-netlify-honeypot="bot-field"
+        onSubmit={handleSubmit}
+      >
+        {/* The `form-name` hidden field is required to support form submissions without JavaScript */}
+        <input type="hidden" name="form-name" value="contact" />
+        <p hidden>
+          <label>
+            Don’t fill this out: <input name="bot-field" onChange={handleChange} />
+          </label>
+        </p>
+        <p>
+          <label>
+            Your name:
+            <br />
+            <input type="text" name="name" onChange={handleChange} />
+          </label>
+        </p>
+        <p>
+          <label>
+            Your email:
+            <br />
+            <input type="email" name="email" onChange={handleChange} />
+          </label>
+        </p>
+        <p>
+          <label>
+            Message:
+            <br />
+            <textarea name="message" onChange={handleChange} />
+          </label>
+        </p>
+        <p>
+          <button type="submit">Send</button>
+        </p>
+      </form>
     </Layout>
   );
 }
