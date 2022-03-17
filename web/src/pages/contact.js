@@ -176,8 +176,15 @@ export default function contactForm(props) {
     <Layout>
       <ContactStyled>
         <SEO title={site.title} description={site.description} keywords={site.keywords} />
+        <input type="hidden" name="form-name" value="contact" />
         <div class="container">
-          <form id="contact" method="POST" data-netlify="true" action="/pages/index">
+          <form
+            id="contact"
+            method="POST"
+            data-netlify="true"
+            data-netlify-honeypot="bot-field"
+            action="index"
+          >
             <h3>Contact Jennie Summerall</h3>
             <fieldset>
               <input
