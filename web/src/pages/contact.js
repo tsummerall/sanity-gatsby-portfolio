@@ -1,9 +1,16 @@
 import React from "react";
-import SEO from "../components/seo";
-import Layout from "../components/layout";
 import { graphql } from "gatsby";
+import {
+  mapEdgesToNodes,
+  filterOutDocsWithoutSlugs,
+  filterOutDocsPublishedInTheFuture
+} from "../lib/helpers";
+import Container from "../components/container";
+import GraphQLErrorList from "../components/graphql-error-list";
 import styled from "styled-components";
 import { navigate } from "gatsby-link";
+import SEO from "../components/seo";
+import Layout from "../containers/layout";
 
 const ContactStyled = styled.div`
   @import url(https://fonts.googleapis.com/css?family=Roboto:400, 300, 600, 400italic);
@@ -46,7 +53,7 @@ const ContactStyled = styled.div`
   #contact {
     background: #f9f9f9;
     padding: 25px;
-    margin: 150px 0;
+    margin: 25px 0;
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
   }
 
@@ -173,6 +180,7 @@ export default function contactForm(props) {
   }
 
   const site = (data || {}).site;
+  console.log("site:", site);
   if (!site) {
     throw new Error(
       'Missing "Site settings". Open the studio at http://localhost:3333 and add some content to "Site settings" and restart the development server.'
@@ -202,61 +210,64 @@ export default function contactForm(props) {
 
   return (
     <Layout>
-      <ContactStyled>
-        <div class="container">
-          <form
-            name="contact"
-            id="contact"
-            method="post"
-            action="/"
-            data-netlify="true"
-            data-netlify-honeypot="bot-field"
-            onSubmit={handleSubmit}
-          >
-            <h3>Contact Jennie Summerall</h3>
-            {/* The `form-name` hidden field is required to support form submissions without JavaScript */}
-            <input type="hidden" name="form-name" value="contact" />
-            <p hidden>
-              <label>
-                Don’t fill this out: <input name="bot-field" onChange={handleChange} />
-              </label>
-            </p>
-            <fieldset>
-              <input
-                tabindex="1"
-                required
-                autofocus
-                placeholder="Your name"
-                type="text"
-                name="name"
-                onChange={handleChange}
-              />
-            </fieldset>
-            <fieldset>
-              <input
-                tabindex="2"
-                required
-                placeholder="Your email"
-                type="email"
-                name="email"
-                onChange={handleChange}
-              />
-            </fieldset>
-            <fieldset>
-              <textarea
-                tabindex="3"
-                required
-                placeholder="Your message"
-                name="message"
-                onChange={handleChange}
-              />
-            </fieldset>
-            <button type="submit" id="contact-submit">
-              Send
-            </button>
-          </form>
-        </div>
-      </ContactStyled>
+      <SEO title={site.title} description={site.description} keywords={site.keywords} />
+      <Container>
+        <ContactStyled>
+          <div className="container">
+            <form
+              name="contact"
+              id="contact"
+              method="post"
+              action="/"
+              data-netlify="true"
+              data-netlify-honeypot="bot-field"
+              onSubmit={handleSubmit}
+            >
+              <h3>Contact Jennie Summerall</h3>
+              {/* The `form-name` hidden field is required to support form submissions without JavaScript */}
+              <input type="hidden" name="form-name" value="contact" />
+              <p hidden>
+                <label>
+                  Don’t fill this out: <input name="bot-field" onChange={handleChange} />
+                </label>
+              </p>
+              <fieldset>
+                <input
+                  tabIndex="1"
+                  required
+                  autoFocus
+                  placeholder="Your name"
+                  type="text"
+                  name="name"
+                  onChange={handleChange}
+                />
+              </fieldset>
+              <fieldset>
+                <input
+                  tabIndex="2"
+                  required
+                  placeholder="Your email"
+                  type="email"
+                  name="email"
+                  onChange={handleChange}
+                />
+              </fieldset>
+              <fieldset>
+                <textarea
+                  tabIndex="3"
+                  required
+                  placeholder="Your message"
+                  name="message"
+                  onChange={handleChange}
+                />
+              </fieldset>
+              <button type="submit" id="contact-submit">
+                Send
+              </button>
+            </form>
+          </div>
+        </ContactStyled>
+      </Container>
     </Layout>
   );
 }
