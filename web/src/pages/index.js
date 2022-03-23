@@ -77,9 +77,9 @@ const HomeStyled = styled.div`
   div.buttonCaption {
     color: white;
     font-face: arial;
-    font-size: 56px;
-    top: 417px;
-    left: 30px;
+    font-size: 32px;
+    top: 300px;
+    left: 20px;
     position: absolute;
     @media (pointer: fine) {
       display: none;
@@ -100,10 +100,10 @@ const HomeStyled = styled.div`
   }
   .navImagesGrid {
     display: grid;
-    max-width: 900px;
-    grid-template-columns: 1fr 1fr;
+    max-width: 1200px;
+    grid-template-columns: 1fr 1fr 1fr;
     grid-gap: 10px;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   }
 `;
 
