@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 import { graphql, Link } from "gatsby";
 import HoverImage from "react-hover-image";
 import {
@@ -60,6 +61,52 @@ export const query = graphql`
   }
 `;
 
+const HomeStyled = styled.div`
+  h2.noTouchScreen {
+    @media (pointer: coarse) {
+      display: none;
+    }
+  }
+  h2.touchScreen {
+    @media (pointer: fine) {
+      display: none;
+    }
+  }
+  div.navImagesGrid {
+  }
+  div.buttonCaption {
+    color: white;
+    font-face: arial;
+    font-size: 56px;
+    top: 417px;
+    left: 30px;
+    position: absolute;
+    @media (pointer: fine) {
+      display: none;
+    }
+  }
+  .hoverButton {
+    position: relative;
+  }
+  .buttonImage:hover {
+    @media (pointer: fine) {
+      filter: saturate(100%) brightness(60%);
+    }
+  }
+  .buttonImage:hover ~ .buttonCaption {
+    @media (pointer: fine) {
+      display: block;
+    }
+  }
+  .navImagesGrid {
+    display: grid;
+    max-width: 900px;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  }
+`;
+
 const IndexPage = props => {
   const { data, errors } = props;
 
@@ -88,10 +135,33 @@ const IndexPage = props => {
     <Layout>
       <SEO title={site.title} description={site.description} keywords={site.keywords} />
       <Container>
-        <h1>Welcome to {site.title}</h1>
-        <Link to="/portraits/">
-          <HoverImage src="portraits.jpg" hoverSrc="PortraitsHover.jpg" />
-        </Link>
+        <HomeStyled>
+          <h1>Welcome to {site.title}</h1>
+          <div className="navImagesGrid">
+            <Link to="/portraits/">
+              <div className="hoverButton">
+                <img className="buttonImage" src="portraits.jpg" alt="" />
+                <div className="buttonCaption">Portraits</div>
+              </div>
+              {/* <HoverImage src="portraits.jpg" hoverSrc="PortraitsHover.jpg" /> */}
+            </Link>
+            <Link to="/paintings/">
+              <div className="hoverButton">
+                <img className="buttonImage" src="circe.jpg" alt="" />
+                <div className="buttonCaption">Paintings</div>
+              </div>
+              {/* <HoverImage src="portraits.jpg" hoverSrc="PortraitsHover.jpg" /> */}
+            </Link>
+            <Link to="/collages/">
+              <div className="hoverButton">
+                <img className="buttonImage" src="femme.jpg" alt="" />
+                <div className="buttonCaption">Collages</div>
+              </div>
+              {/* <HoverImage src="portraits.jpg" hoverSrc="PortraitsHover.jpg" /> */}
+            </Link>
+          </div>
+          <Link to="/paintings/"></Link>
+        </HomeStyled>
       </Container>
     </Layout>
   );
