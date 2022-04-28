@@ -1,12 +1,26 @@
+import { orderRankField, orderRankOrdering } from "@sanity/orderable-document-list";
+
 export default {
   name: "category",
   type: "document",
   title: "Category",
+  orderings: [orderRankOrdering],
   fields: [
+    orderRankField({ type: "category" }),
     {
       name: "title",
       type: "string",
       title: "Title"
+    },
+    {
+      name: "buttonImage",
+      type: "figure",
+      title: "Button Image"
+    },
+    {
+      name: "buttonBackgroundColor",
+      type: "color",
+      title: "Button Bkgd Color"
     },
     {
       name: "description",
@@ -25,7 +39,8 @@ export default {
     {
       name: "order",
       type: "number",
-      title: "Order"
+      title: "Order",
+      hidden: true
     }
   ]
 };
