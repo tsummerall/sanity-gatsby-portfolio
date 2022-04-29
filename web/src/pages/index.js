@@ -1,15 +1,15 @@
 import React from "react";
 import styled from "styled-components";
 import { graphql, Link } from "gatsby";
-import HoverImage from "react-hover-image";
 import {
   mapEdgesToNodes,
   filterOutDocsWithoutSlugs,
-  filterOutDocsPublishedInTheFuture
+  filterOutDocsPublishedInTheFuture,
+  buildImageObj
 } from "../lib/helpers";
+import { imageUrlFor } from "../lib/image-url";
 import Container from "../components/container";
 import GraphQLErrorList from "../components/graphql-error-list";
-import ProjectPreviewGrid from "../components/project-preview-grid";
 import SEO from "../components/seo";
 import Layout from "../containers/layout";
 
@@ -19,6 +19,44 @@ export const query = graphql`
       title
       description
       keywords
+    }
+    categories: allSanityCategory(sort: { order: ASC, fields: orderRank }) {
+      edges {
+        node {
+          id
+          order
+          buttonImage {
+            crop {
+              _key
+              _type
+              top
+              bottom
+              left
+              right
+            }
+            hotspot {
+              _key
+              _type
+              x
+              y
+              height
+              width
+            }
+            asset {
+              _id
+            }
+            alt
+            caption
+          }
+          buttonBackgroundColor {
+            hex
+          }
+          title
+          slug {
+            current
+          }
+        }
+      }
     }
     projects: allSanitySampleProject(
       limit: 6
@@ -62,21 +100,19 @@ export const query = graphql`
 `;
 
 const HomeStyled = styled.div`
-  h2.noTouchScreen {
-    @media (pointer: coarse) {
-      display: none;
-    }
+  .navImagesGrid {
+    display: grid;
+    max-width: 1200px;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   }
-  h2.touchScreen {
-    @media (pointer: fine) {
-      display: none;
-    }
-  }
-  div.navImagesGrid {
-  }
+`;
+
+const HomeNavLinkStyled = styled.div`
   div.buttonCaption {
     color: white;
-    font-face: arial;
+    font: arial;
     font-size: 32px;
     top: 300px;
     left: 20px;
@@ -85,25 +121,26 @@ const HomeStyled = styled.div`
       display: none;
     }
   }
+  .bullshit {
+    background-color: ${props => props.bgcolor};
+    float: left;
+  }
+  .buttonImage {
+    display: block;
+  }
   .hoverButton {
     position: relative;
   }
   .buttonImage:hover {
     @media (pointer: fine) {
-      filter: saturate(100%) brightness(60%);
+      //     filter: saturate(100%) brightness(60%);
+      opacity: 0;
     }
   }
   .buttonImage:hover ~ .buttonCaption {
     @media (pointer: fine) {
       display: block;
     }
-  }
-  .navImagesGrid {
-    display: grid;
-    max-width: 1200px;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-gap: 10px;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   }
 `;
 
@@ -130,7 +167,11 @@ const IndexPage = props => {
       'Missing "Site settings". Open the studio at http://localhost:3333 and add some content to "Site settings" and restart the development server.'
     );
   }
-
+  const catArray = data.categories.edges;
+  console.log(catArray);
+  console.log(catArray[0].node.id);
+  console.log(catArray[0].node.buttonImage);
+  console.log(catArray[0].node.slug.current);
   return (
     <Layout>
       <SEO title={site.title} description={site.description} keywords={site.keywords} />
@@ -138,29 +179,27 @@ const IndexPage = props => {
         <HomeStyled>
           <h1>Welcome to {site.title}</h1>
           <div className="navImagesGrid">
-            <Link to="/portraits/">
-              <div className="hoverButton">
-                <img className="buttonImage" src="portraits.jpg" alt="" />
-                <div className="buttonCaption">Portraits</div>
-              </div>
-              {/* <HoverImage src="portraits.jpg" hoverSrc="PortraitsHover.jpg" /> */}
-            </Link>
-            <Link to="/paintings/">
-              <div className="hoverButton">
-                <img className="buttonImage" src="circe.jpg" alt="" />
-                <div className="buttonCaption">Paintings</div>
-              </div>
-              {/* <HoverImage src="portraits.jpg" hoverSrc="PortraitsHover.jpg" /> */}
-            </Link>
-            <Link to="/collages/">
-              <div className="hoverButton">
-                <img className="buttonImage" src="femme.jpg" alt="" />
-                <div className="buttonCaption">Collages</div>
-              </div>
-              {/* <HoverImage src="portraits.jpg" hoverSrc="PortraitsHover.jpg" /> */}
-            </Link>
+            {catArray &&
+              catArray.map(cat => (
+                <HomeNavLinkStyled bgcolor={cat.node.buttonBackgroundColor.hex}>
+                  <Link key={cat.node.id} to={cat.node.slug.current}>
+                    <div className="hoverButton">
+                      <div className="bullshit">
+                        <img
+                          className="buttonImage"
+                          src={imageUrlFor(buildImageObj(cat.node.buttonImage))
+                            .width(270)
+                            .height(400)
+                            .url()}
+                          alt={cat.node.buttonImage.alt}
+                        />
+                        <div className="buttonCaption">{cat.node.title}</div>
+                      </div>
+                    </div>
+                  </Link>
+                </HomeNavLinkStyled>
+              ))}
           </div>
-          <Link to="/paintings/"></Link>
         </HomeStyled>
       </Container>
     </Layout>
@@ -168,3 +207,7 @@ const IndexPage = props => {
 };
 
 export default IndexPage;
+
+// To do:
+// - sort order in CMS and here
+// - images in the buttons from CMS
