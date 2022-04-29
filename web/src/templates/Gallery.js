@@ -20,7 +20,7 @@ export const query = graphql`
     }
     projects: allSanitySampleProject(
       limit: 30
-      sort: { fields: [publishedAt], order: DESC }
+      sort: { fields: orderRank, order: ASC }
       filter: {
         categories: { elemMatch: { title: { eq: $categoryTitle } } }
         slug: { current: { ne: null } }
